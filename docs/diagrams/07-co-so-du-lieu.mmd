@@ -1,0 +1,20 @@
+%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Arial", "primaryColor": "#eff6ff", "primaryTextColor": "#1f2937", "primaryBorderColor": "#2563eb", "lineColor": "#475569"}}}%%
+erDiagram
+  AUTH_USERS ||--o{ TEMPLATES : "sở hữu"
+
+  AUTH_USERS {
+    uuid id PK "Supabase Auth"
+    string email UK "Email đăng nhập"
+    timestamptz created_at "Ngày tạo tài khoản"
+  }
+
+  TEMPLATES {
+    uuid id PK "Mã mẫu"
+    uuid user_id FK "Chủ sở hữu"
+    text label "Nhãn kỹ thuật"
+    text phrase "Câu tiếng Việt"
+    smallint hand_count "Số tay: 1 hoặc 2"
+    jsonb frames "Chuỗi 20 frame, 130 số mỗi frame"
+    timestamptz created_at "Ngày tạo mẫu"
+  }
+

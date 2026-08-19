@@ -1,0 +1,54 @@
+%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Arial", "primaryColor": "#fff7ed", "primaryTextColor": "#1f2937", "primaryBorderColor": "#ea580c", "lineColor": "#475569", "secondaryColor": "#eff6ff"}}}%%
+flowchart LR
+  USER["◯<br/>╱│╲<br/>╱ ╲<br/>Người dùng"]
+  MICROPHONE["Microphone"]
+  SPEECH_API["Web Speech Recognition API"]
+  CLIPBOARD["Clipboard API"]
+
+  subgraph SPEECH["CHI TIẾT USE CASE GIỌNG NÓI SANG VĂN BẢN"]
+    direction TB
+    USER_GATE(( ))
+    MICROPHONE_GATE(( ))
+    SPEECH_API_GATE(( ))
+    CLIPBOARD_GATE(( ))
+    START(["Bắt đầu nghe"])
+    PERMISSION(["Kiểm tra hỗ trợ và quyền micro"])
+    CAPTURE(["Thu nhận giọng nói tiếng Việt"])
+    TRANSCRIBE(["Chuyển giọng nói thành văn bản"])
+    INTERIM(["Hiển thị văn bản tạm thời"])
+    FINAL(["Hiển thị văn bản xác nhận"])
+    RESTART(["Tự khởi động lại khi bị ngắt"])
+    STOP(["Dừng nghe"])
+    CLEAR(["Xóa văn bản"])
+    COPY(["Sao chép văn bản"])
+    SAVE(["Lưu vào nhật ký phiên"])
+    ERROR(["Thông báo lỗi tiếng Việt"])
+  end
+
+  USER --- USER_GATE
+  USER_GATE --- START
+  USER_GATE --- STOP
+  USER_GATE --- CLEAR
+  USER_GATE --- COPY
+  USER_GATE --- SAVE
+  START -. "bao gồm" .-> PERMISSION
+  PERMISSION -->|"được phép"| CAPTURE
+  PERMISSION -->|"không hỗ trợ hoặc bị từ chối"| ERROR
+  CAPTURE --> TRANSCRIBE
+  TRANSCRIBE --> INTERIM
+  TRANSCRIBE --> FINAL
+  TRANSCRIBE -. "mở rộng" .-> RESTART
+  CAPTURE --- MICROPHONE_GATE
+  MICROPHONE_GATE --- MICROPHONE
+  TRANSCRIBE --- SPEECH_API_GATE
+  SPEECH_API_GATE --- SPEECH_API
+  COPY --- CLIPBOARD_GATE
+  CLIPBOARD_GATE --- CLIPBOARD
+
+  classDef actor fill:transparent,stroke:transparent,color:#0f172a;
+  classDef external fill:#eff6ff,stroke:#2563eb,stroke-width:1.5px;
+  classDef gate fill:transparent,stroke:transparent,color:transparent;
+  class USER actor;
+  class MICROPHONE,SPEECH_API,CLIPBOARD external;
+  class USER_GATE,MICROPHONE_GATE,SPEECH_API_GATE,CLIPBOARD_GATE gate;
+  style SPEECH fill:transparent,stroke:#94a3b8,stroke-width:1px;

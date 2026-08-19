@@ -1,0 +1,62 @@
+%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Arial", "primaryColor": "#fff7ed", "primaryTextColor": "#1f2937", "primaryBorderColor": "#ea580c", "lineColor": "#475569", "secondaryColor": "#eff6ff", "tertiaryColor": "#f8fafc"}}}%%
+flowchart LR
+  KHACH["◯<br/>╱│╲<br/>╱ ╲<br/>Khách truy cập"]
+  NGUOIDUNG["◯<br/>╱│╲<br/>╱ ╲<br/>Người dùng"]
+  SUPABASE["Dịch vụ Supabase"]
+  WEBAPI["Dịch vụ trình duyệt"]
+
+  subgraph HETHONG["HỆ THỐNG VŨ THOẠI"]
+    direction TB
+    GUEST_GATE(( ))
+    USER_GATE(( ))
+    SUPABASE_GATE(( ))
+    WEBAPI_GATE(( ))
+    UC01(["Xem trang giới thiệu"])
+    UC02(["Đăng ký tài khoản"])
+    UC03(["Đăng nhập"])
+    UC04(["Đăng xuất"])
+    UC05(["Quản lý thư viện ký hiệu"])
+    UC06(["Ghi mẫu ký hiệu"])
+    UC07(["Chuyển ký hiệu thành văn bản"])
+    UC08(["Đọc kết quả thành tiếng"])
+    UC09(["Chuyển giọng nói thành văn bản"])
+    UC10(["Quản lý nhật ký phiên"])
+  end
+
+  KHACH --- GUEST_GATE
+  GUEST_GATE --- UC01
+  GUEST_GATE --- UC02
+  GUEST_GATE --- UC03
+  NGUOIDUNG --- USER_GATE
+  USER_GATE --- UC04
+  USER_GATE --- UC05
+  USER_GATE --- UC06
+  USER_GATE --- UC07
+  USER_GATE --- UC08
+  USER_GATE --- UC09
+  USER_GATE --- UC10
+
+  UC02 --- SUPABASE_GATE
+  UC03 --- SUPABASE_GATE
+  UC04 --- SUPABASE_GATE
+  UC05 --- SUPABASE_GATE
+  UC06 --- SUPABASE_GATE
+  SUPABASE_GATE --- SUPABASE
+  UC07 --- WEBAPI_GATE
+  UC08 --- WEBAPI_GATE
+  UC09 --- WEBAPI_GATE
+  WEBAPI_GATE --- WEBAPI
+
+  UC06 -. "mở rộng" .-> UC05
+  UC07 -. "bao gồm tải thư viện" .-> UC05
+  UC08 -. "mở rộng" .-> UC07
+  UC07 -. "mở rộng lưu kết quả" .-> UC10
+  UC09 -. "mở rộng lưu kết quả" .-> UC10
+
+  classDef actor fill:transparent,stroke:transparent,color:#0f172a;
+  classDef external fill:#eff6ff,stroke:#2563eb,stroke-width:1.5px,color:#1e3a8a;
+  classDef gate fill:transparent,stroke:transparent,color:transparent;
+  class KHACH,NGUOIDUNG actor;
+  class SUPABASE,WEBAPI external;
+  class GUEST_GATE,USER_GATE,SUPABASE_GATE,WEBAPI_GATE gate;
+  style HETHONG fill:transparent,stroke:#94a3b8,stroke-width:1px;

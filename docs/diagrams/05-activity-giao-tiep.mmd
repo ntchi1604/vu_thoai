@@ -1,0 +1,41 @@
+%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Arial", "primaryColor": "#fff7ed", "primaryTextColor": "#1f2937", "primaryBorderColor": "#ea580c", "lineColor": "#475569", "secondaryColor": "#eff6ff", "tertiaryColor": "#f8fafc"}}}%%
+flowchart TD
+  START(("Bắt đầu")) --> LANDING["Mở trang Vũ Thoại"]
+  LANDING --> HAS_SESSION{"Đã đăng nhập?"}
+  HAS_SESSION -->|"Chưa"| AUTH["Đăng ký hoặc đăng nhập"]
+  AUTH --> AUTH_OK{"Xác thực thành công?"}
+  AUTH_OK -->|"Không"| AUTH_ERROR["Hiển thị lỗi"] --> AUTH
+  AUTH_OK -->|"Có"| TOOL["Mở không gian giao tiếp"]
+  HAS_SESSION -->|"Rồi"| TOOL
+
+  TOOL --> CHANNEL{"Chọn kênh giao tiếp"}
+
+  CHANNEL -->|"Ký hiệu"| CAMERA["Bật camera"]
+  CAMERA --> HANDS["Phát hiện landmark bàn tay"]
+  HANDS --> MATCH["So khớp với thư viện bằng DTW"]
+  MATCH --> FOUND{"Nhận diện ổn định?"}
+  FOUND -->|"Chưa"| HANDS
+  FOUND -->|"Có"| SIGN_TEXT["Hiển thị câu tiếng Việt"]
+  SIGN_TEXT --> AUTO_SPEAK{"Bật đọc tự động?"}
+  AUTO_SPEAK -->|"Có"| SPEAK["Đọc câu thành tiếng"]
+  AUTO_SPEAK -->|"Không"| SIGN_LOG["Thêm vào nhật ký"]
+  SPEAK --> SIGN_LOG
+
+  CHANNEL -->|"Giọng nói"| MIC["Bật nhận diện micro"]
+  MIC --> LISTEN["Thu nhận giọng nói vi-VN"]
+  LISTEN --> TRANSCRIPT["Hiển thị interim và final text"]
+  TRANSCRIPT --> SAVE{"Người dùng chọn lưu?"}
+  SAVE -->|"Có"| SPEECH_LOG["Thêm vào nhật ký"]
+  SAVE -->|"Không"| CONTINUE
+  SPEECH_LOG --> CONTINUE{"Tiếp tục giao tiếp?"}
+  SIGN_LOG --> CONTINUE
+  CONTINUE -->|"Có"| CHANNEL
+  CONTINUE -->|"Không"| LOGOUT{"Đăng xuất?"}
+  LOGOUT -->|"Có"| END_SESSION["Đóng phiên Supabase"]
+  LOGOUT -->|"Không"| LANDING_RETURN["Quay về trang chủ"]
+  END_SESSION --> FINISH(("Kết thúc"))
+  LANDING_RETURN --> FINISH
+
+  classDef decision fill:#fef3c7,stroke:#d97706,stroke-width:1.5px;
+  class HAS_SESSION,AUTH_OK,CHANNEL,FOUND,AUTO_SPEAK,SAVE,CONTINUE,LOGOUT decision;
+

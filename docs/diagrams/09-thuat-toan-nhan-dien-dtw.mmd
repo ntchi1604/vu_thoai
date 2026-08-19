@@ -1,0 +1,31 @@
+%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Arial", "primaryColor": "#fff7ed", "primaryTextColor": "#1f2937", "primaryBorderColor": "#ea580c", "lineColor": "#475569", "secondaryColor": "#eff6ff"}}}%%
+flowchart TD
+  START(("Frame video mới")) --> DETECT["MediaPipe phát hiện tối đa 2 bàn tay"]
+  DETECT --> HANDS{"Có 1 hoặc 2 bàn tay hợp lệ?"}
+  HANDS -->|"Không"| RELEASE["Đặt trạng thái không phát hiện và giải phóng cử chỉ"] --> NEXT(("Chờ frame tiếp theo"))
+  HANDS -->|"Có"| ORDER["Sắp xếp tay theo handedness và vị trí"]
+  ORDER --> NORMALIZE["Chuẩn hóa 21 landmark mỗi tay"]
+  NORMALIZE --> VECTOR["Tạo vector 130 chiều cho mỗi frame"]
+  VECTOR --> MOTION["Đo chuyển động và cập nhật cửa sổ pre-roll"]
+  MOTION --> CAPTURE{"Đủ điều kiện bắt đầu ghi chuỗi?"}
+  CAPTURE -->|"Chưa"| NEXT
+  CAPTURE -->|"Có"| WINDOW["Thu chuỗi trong cửa sổ tối đa 2,6 giây"]
+  WINDOW --> READY{"Đủ frame và thời lượng?"}
+  READY -->|"Chưa"| NEXT
+  READY -->|"Đủ"| FILTER["Lọc nhãn có ít nhất 2 mẫu và cùng số tay"]
+  FILTER --> DESCRIPTOR["So sánh mô tả thô, giữ tối đa 24 ứng viên"]
+  DESCRIPTOR --> DTW["Tính khoảng cách Dynamic Time Warping"]
+  DTW --> VOTE["Gộp 3 mẫu gần nhất theo trọng số 0,65 - 0,25 - 0,10"]
+  VOTE --> THRESHOLD{"Đạt distance, margin và completion?"}
+  THRESHOLD -->|"Không"| UNKNOWN["Kết quả UNKNOWN"] --> NEXT
+  THRESHOLD -->|"Có"| CONFIRM["Tích lũy 3 lần xác nhận"]
+  CONFIRM --> STABLE{"Đã ổn định và không bị chặn lặp?"}
+  STABLE -->|"Chưa"| NEXT
+  STABLE -->|"Có"| EMIT["Phát nhãn và câu tiếng Việt"]
+  EMIT --> LATCH["Khóa cử chỉ hiện tại đến khi có động tác mới"]
+  LATCH --> HISTORY["Hiển thị, đọc thành tiếng và thêm nhật ký"]
+  HISTORY --> NEXT
+
+  classDef decision fill:#fef3c7,stroke:#d97706,stroke-width:1.5px;
+  class HANDS,CAPTURE,READY,THRESHOLD,STABLE decision;
+

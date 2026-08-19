@@ -1,0 +1,77 @@
+%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Arial", "primaryColor": "#fff7ed", "primaryTextColor": "#1f2937", "primaryBorderColor": "#ea580c", "lineColor": "#475569", "secondaryColor": "#eff6ff", "tertiaryColor": "#f8fafc"}}}%%
+flowchart TB
+  USER["Người dùng"]
+
+  subgraph BROWSER["TRÌNH DUYỆT WEB - REACT/VITE"]
+    direction TB
+    subgraph UI["Tầng giao diện"]
+      APP["App và điều hướng"]
+      LANDING["LandingPage"]
+      AUTH["AuthPage"]
+      SIGN["SignToTextPanel"]
+      SPEECH["SpeechToTextPanel"]
+      HISTORY["ConversationHistory"]
+    end
+
+    subgraph HOOKS["Tầng trạng thái và nghiệp vụ"]
+      USE_AUTH["useAuth"]
+      USE_CAMERA["useCamera"]
+      USE_HAND["useHandLandmarker"]
+      USE_LIBRARY["useTwoHandSequenceLibrary"]
+      USE_SPEECH["useSpeechRecognition"]
+      USE_TTS["useSpeechSynthesis"]
+    end
+
+    subgraph SERVICES["Tầng dịch vụ và thuật toán"]
+      HAND_SERVICE["MediaPipe Hand Landmarker Service"]
+      NORMALIZER["Landmark Normalizer"]
+      CLASSIFIER["DTW Sequence Classifier"]
+      AUDIO["Vietnamese Audio Service"]
+      SUPA_CLIENT["Supabase Client"]
+    end
+
+    LOCAL["localStorage: tối đa 20 mục lịch sử"]
+  end
+
+  subgraph EXTERNAL["DỊCH VỤ VÀ THIẾT BỊ NGOÀI"]
+    CAMERA["Camera"]
+    MIC["Microphone"]
+    SPEAKER["Loa"]
+    WEB_SPEECH["Web Speech APIs"]
+    CDN["jsDelivr: MediaPipe WASM và model"]
+    SUPABASE["Supabase Auth và PostgreSQL"]
+  end
+
+  USER --> UI
+  APP --> LANDING
+  APP --> AUTH
+  APP --> SIGN
+  APP --> SPEECH
+  APP --> HISTORY
+  AUTH --> USE_AUTH
+  SIGN --> USE_CAMERA
+  SIGN --> USE_HAND
+  SIGN --> USE_LIBRARY
+  SIGN --> AUDIO
+  SPEECH --> USE_SPEECH
+  HISTORY --> LOCAL
+  APP --> LOCAL
+
+  USE_AUTH --> SUPA_CLIENT
+  USE_LIBRARY --> SUPA_CLIENT
+  USE_HAND --> HAND_SERVICE
+  USE_HAND --> NORMALIZER
+  USE_HAND --> CLASSIFIER
+  USE_TTS --> AUDIO
+
+  USE_CAMERA --> CAMERA
+  USE_SPEECH --> MIC
+  USE_SPEECH --> WEB_SPEECH
+  AUDIO --> WEB_SPEECH
+  AUDIO --> SPEAKER
+  HAND_SERVICE --> CDN
+  SUPA_CLIENT --> SUPABASE
+
+  classDef external fill:#eff6ff,stroke:#2563eb,stroke-width:1.5px;
+  class CAMERA,MIC,SPEAKER,WEB_SPEECH,CDN,SUPABASE external;
+

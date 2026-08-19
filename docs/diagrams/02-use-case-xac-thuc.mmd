@@ -1,0 +1,44 @@
+%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Arial", "primaryColor": "#fff7ed", "primaryTextColor": "#1f2937", "primaryBorderColor": "#ea580c", "lineColor": "#475569", "secondaryColor": "#eff6ff"}}}%%
+flowchart LR
+  KHACH["◯<br/>╱│╲<br/>╱ ╲<br/>Khách truy cập"]
+  SUPABASE["Supabase Auth"]
+
+  subgraph AUTH["CHI TIẾT USE CASE XÁC THỰC"]
+    direction TB
+    USER_GATE(( ))
+    SUPABASE_GATE(( ))
+    OPEN(["Mở công cụ"])
+    CHECK(["Kiểm tra phiên đăng nhập"])
+    REGISTER(["Đăng ký bằng email và mật khẩu"])
+    LOGIN(["Đăng nhập"])
+    VALIDATE(["Kiểm tra thông tin hợp lệ"])
+    SESSION(["Tạo và duy trì phiên"])
+    ERROR(["Hiển thị lỗi tiếng Việt"])
+    LOGOUT(["Đăng xuất"])
+  end
+
+  KHACH --- USER_GATE
+  USER_GATE --- OPEN
+  USER_GATE --- REGISTER
+  USER_GATE --- LOGIN
+  USER_GATE --- LOGOUT
+  OPEN -. "bao gồm" .-> CHECK
+  REGISTER -. "bao gồm" .-> VALIDATE
+  LOGIN -. "bao gồm" .-> VALIDATE
+  VALIDATE -->|"thành công"| SESSION
+  VALIDATE -->|"thất bại"| ERROR
+  CHECK -->|"chưa có phiên"| LOGIN
+  CHECK -->|"đã có phiên"| SESSION
+  REGISTER --- SUPABASE_GATE
+  LOGIN --- SUPABASE_GATE
+  SESSION --- SUPABASE_GATE
+  LOGOUT --- SUPABASE_GATE
+  SUPABASE_GATE --- SUPABASE
+
+  classDef actor fill:transparent,stroke:transparent,color:#0f172a;
+  classDef external fill:#eff6ff,stroke:#2563eb,stroke-width:1.5px;
+  classDef gate fill:transparent,stroke:transparent,color:transparent;
+  class KHACH actor;
+  class SUPABASE external;
+  class USER_GATE,SUPABASE_GATE gate;
+  style AUTH fill:transparent,stroke:#94a3b8,stroke-width:1px;

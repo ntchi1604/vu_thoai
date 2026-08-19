@@ -1,0 +1,54 @@
+@startuml
+left to right direction
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam shadowing false
+skinparam actorStyle stickman
+skinparam ArrowColor #475569
+skinparam UsecaseBackgroundColor #FFF7ED
+skinparam UsecaseBorderColor #EA580C
+skinparam UsecaseFontColor #1F2937
+skinparam RectangleBorderColor #94A3B8
+
+actor "Người dùng" as User
+rectangle "Camera và MediaPipe" as Camera #EFF6FF
+rectangle "Supabase Database" as Database #EFF6FF
+rectangle "Speech Synthesis" as Speaker #EFF6FF
+
+rectangle "CHI TIẾT USE CASE KÝ HIỆU SANG VĂN BẢN" {
+  usecase "Bật hoặc tắt camera" as CameraOn
+  usecase "Tải thư viện ký hiệu" as Load
+  usecase "Ghi mẫu ký hiệu" as Record
+  usecase "Nhập nhãn và\ncâu tiếng Việt" as Label
+  usecase "Lưu mẫu theo tài khoản" as Save
+  usecase "Xem hoặc xóa mẫu" as Manage
+  usecase "Phát hiện landmark\nbàn tay" as Detect
+  usecase "So khớp chuỗi\nbằng DTW" as Classify
+  usecase "Hiển thị kết quả" as Result
+  usecase "Đọc kết quả" as Speak
+  usecase "Lưu vào nhật ký phiên" as History
+  usecase "Nhận lại cử chỉ" as Rearm
+}
+
+User -right- CameraOn
+User -right- Record
+User -right- Manage
+User -right- Result
+User -right- Speak
+User -right- Rearm
+Record ..> Label : <<include>>
+Record ..> Detect : <<include>>
+Record ..> Save : <<include>>
+Classify ..> Load : <<include>>
+Classify ..> Detect : <<include>>
+Classify ..> Result : <<include>>
+Speak ..> Result : <<extend>>
+Result ..> History : <<include>>
+Rearm ..> Classify : <<extend>>
+CameraOn -right- Camera
+Detect -right- Camera
+Load -right- Database
+Save -right- Database
+Manage -right- Database
+Speak -right- Speaker
+@enduml

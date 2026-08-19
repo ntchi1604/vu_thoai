@@ -1,0 +1,42 @@
+@startuml
+left to right direction
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam shadowing false
+skinparam actorStyle stickman
+skinparam ArrowColor #475569
+skinparam UsecaseBackgroundColor #FFF7ED
+skinparam UsecaseBorderColor #EA580C
+skinparam UsecaseFontColor #1F2937
+skinparam RectangleBorderColor #94A3B8
+
+actor "Khách truy cập" as Guest
+rectangle "Supabase Auth" as Supabase #EFF6FF
+
+rectangle "CHI TIẾT USE CASE XÁC THỰC" {
+  usecase "Mở công cụ" as Open
+  usecase "Kiểm tra phiên\nđăng nhập" as Check
+  usecase "Đăng ký bằng email\nvà mật khẩu" as Register
+  usecase "Đăng nhập" as Login
+  usecase "Kiểm tra thông tin\nhợp lệ" as Validate
+  usecase "Tạo và duy trì phiên" as Session
+  usecase "Hiển thị lỗi\ntiếng Việt" as Error
+  usecase "Đăng xuất" as Logout
+}
+
+Guest -right- Open
+Guest -right- Register
+Guest -right- Login
+Guest -right- Logout
+Open ..> Check : <<include>>
+Register ..> Validate : <<include>>
+Login ..> Validate : <<include>>
+Validate ..> Session : <<extend>>\nThành công
+Error ..> Validate : <<extend>>\nThất bại
+Check ..> Login : <<extend>>\nChưa có phiên
+Check ..> Session : <<extend>>\nĐã có phiên
+Register -right- Supabase
+Login -right- Supabase
+Session -right- Supabase
+Logout -right- Supabase
+@enduml

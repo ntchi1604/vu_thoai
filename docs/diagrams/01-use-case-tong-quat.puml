@@ -1,0 +1,61 @@
+@startuml
+left to right direction
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam shadowing false
+skinparam actorStyle stickman
+skinparam packageStyle rectangle
+skinparam linetype polyline
+skinparam ArrowColor #475569
+skinparam ActorBorderColor #0F172A
+skinparam ActorFontColor #0F172A
+skinparam UsecaseBackgroundColor #FFF7ED
+skinparam UsecaseBorderColor #EA580C
+skinparam UsecaseFontColor #1F2937
+skinparam RectangleBorderColor #94A3B8
+
+actor "Khách truy cập" as Guest
+actor "Người dùng" as User
+
+rectangle "HỆ THỐNG VŨ THOẠI" {
+  usecase "Xem trang\ngiới thiệu" as UC01
+  usecase "Đăng ký\ntài khoản" as UC02
+  usecase "Đăng nhập" as UC03
+  usecase "Đăng xuất" as UC04
+  usecase "Quản lý thư viện\nký hiệu" as UC05
+  usecase "Ghi mẫu\nký hiệu" as UC06
+  usecase "Chuyển ký hiệu\nthành văn bản" as UC07
+  usecase "Đọc kết quả\nthành tiếng" as UC08
+  usecase "Chuyển giọng nói\nthành văn bản" as UC09
+  usecase "Quản lý\nnhật ký phiên" as UC10
+
+  UC01 -[hidden]down- UC02
+  UC02 -[hidden]down- UC03
+  UC03 -[hidden]down- UC04
+  UC05 -[hidden]down- UC06
+  UC07 -[hidden]down- UC08
+  UC09 -[hidden]down- UC10
+  UC01 -[hidden]right- UC05
+  UC05 -[hidden]right- UC07
+  UC07 -[hidden]right- UC09
+}
+
+Guest -right- UC01
+Guest -right- UC02
+Guest -right- UC03
+User -right- UC04
+User -right- UC05
+User -right- UC06
+User -right- UC07
+User -right- UC08
+User -right- UC09
+User -right- UC10
+
+Guest -[hidden]down- User
+
+UC06 ..> UC05 : <<extend>>
+UC07 ..> UC05 : <<include>>\nTải thư viện
+UC08 ..> UC07 : <<extend>>
+UC07 ..> UC10 : <<extend>>\nLưu kết quả
+UC09 ..> UC10 : <<extend>>\nLưu kết quả
+@enduml

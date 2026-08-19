@@ -1,0 +1,48 @@
+@startuml
+left to right direction
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam shadowing false
+skinparam actorStyle stickman
+skinparam ArrowColor #475569
+skinparam UsecaseBackgroundColor #FFF7ED
+skinparam UsecaseBorderColor #EA580C
+skinparam UsecaseFontColor #1F2937
+skinparam RectangleBorderColor #94A3B8
+
+actor "Người dùng" as User
+rectangle "Microphone" as Microphone #EFF6FF
+rectangle "Web Speech Recognition API" as SpeechAPI #EFF6FF
+rectangle "Clipboard API" as Clipboard #EFF6FF
+
+rectangle "CHI TIẾT USE CASE GIỌNG NÓI SANG VĂN BẢN" {
+  usecase "Bắt đầu nghe" as Start
+  usecase "Kiểm tra hỗ trợ\nvà quyền micro" as Permission
+  usecase "Thu nhận giọng nói\ntiếng Việt" as Capture
+  usecase "Chuyển giọng nói\nthành văn bản" as Transcribe
+  usecase "Hiển thị văn bản\ntạm thời" as Interim
+  usecase "Hiển thị văn bản\nxác nhận" as Final
+  usecase "Tự khởi động lại\nkhi bị ngắt" as Restart
+  usecase "Dừng nghe" as Stop
+  usecase "Xóa văn bản" as Clear
+  usecase "Sao chép văn bản" as Copy
+  usecase "Lưu vào nhật ký phiên" as Save
+  usecase "Thông báo lỗi\ntiếng Việt" as Error
+}
+
+User -right- Start
+User -right- Stop
+User -right- Clear
+User -right- Copy
+User -right- Save
+Start ..> Permission : <<include>>
+Capture ..> Permission : <<extend>>\nĐược phép
+Error ..> Permission : <<extend>>\nKhông hỗ trợ hoặc bị từ chối
+Capture ..> Transcribe : <<include>>
+Transcribe ..> Interim : <<include>>
+Transcribe ..> Final : <<include>>
+Restart ..> Transcribe : <<extend>>
+Capture -right- Microphone
+Transcribe -right- SpeechAPI
+Copy -right- Clipboard
+@enduml

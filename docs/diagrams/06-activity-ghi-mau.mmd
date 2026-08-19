@@ -1,0 +1,32 @@
+%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Arial", "primaryColor": "#fff7ed", "primaryTextColor": "#1f2937", "primaryBorderColor": "#ea580c", "lineColor": "#475569", "secondaryColor": "#eff6ff"}}}%%
+stateDiagram-v2
+  [*] --> ChoNhapThongTin
+  ChoNhapThongTin: Nhập nhãn kỹ thuật và câu tiếng Việt
+  ChoNhapThongTin --> KiemTra: Chọn Ghi mẫu ký hiệu
+  KiemTra --> ChoNhapThongTin: Thiếu nhãn hoặc câu
+  KiemTra --> DinhVi: Dữ liệu hợp lệ
+  DinhVi: Đưa một hoặc hai tay vào camera
+  DinhVi --> DinhVi: Không thấy tay hoặc số tay thay đổi
+  DinhVi --> DemNguoc: Tay ổn định đủ thời gian
+  DemNguoc: Đếm ngược 3 giây
+  DemNguoc --> DinhVi: Tay di chuyển quá ngưỡng
+  DemNguoc --> SanSang: Hoàn tất đếm ngược
+  SanSang: Chờ chuyển động bắt đầu
+  SanSang --> DangGhi: Phát hiện chuyển động
+  SanSang --> DangGhi: Giữ ký hiệu tĩnh đủ lâu
+  DangGhi: Thu các frame landmark
+  DangGhi --> HoanTat: Hết thời lượng hoặc chuyển động kết thúc
+  HoanTat: Chuẩn hóa và lấy mẫu lại thành 20 frame
+  HoanTat --> LuuSupabase: Mẫu hợp lệ
+  HoanTat --> DinhVi: Không đủ frame
+  LuuSupabase: Lưu mẫu theo người dùng
+  LuuSupabase --> SanSangNhanDien: Nhãn có ít nhất 2 mẫu
+  LuuSupabase --> ChoNhapThongTin: Nhãn chưa đủ 2 mẫu
+  SanSangNhanDien --> [*]
+  ChoNhapThongTin --> DaHuy: Người dùng hủy
+  DinhVi --> DaHuy: Người dùng hủy
+  DemNguoc --> DaHuy: Người dùng hủy
+  SanSang --> DaHuy: Người dùng hủy
+  DangGhi --> DaHuy: Người dùng hủy
+  DaHuy --> [*]
+

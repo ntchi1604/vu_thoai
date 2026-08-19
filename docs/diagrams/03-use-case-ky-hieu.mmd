@@ -1,0 +1,62 @@
+%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Arial", "primaryColor": "#fff7ed", "primaryTextColor": "#1f2937", "primaryBorderColor": "#ea580c", "lineColor": "#475569", "secondaryColor": "#eff6ff"}}}%%
+flowchart LR
+  USER["◯<br/>╱│╲<br/>╱ ╲<br/>Người dùng"]
+  CAMERA["Camera và MediaPipe"]
+  DATABASE["Supabase Database"]
+  SPEAKER["Speech Synthesis"]
+
+  subgraph SIGN["CHI TIẾT USE CASE KÝ HIỆU SANG VĂN BẢN"]
+    direction TB
+    USER_GATE(( ))
+    CAMERA_GATE(( ))
+    DATABASE_GATE(( ))
+    SPEAKER_GATE(( ))
+    CAMERA_ON(["Bật hoặc tắt camera"])
+    LOAD(["Tải thư viện ký hiệu"])
+    RECORD(["Ghi mẫu ký hiệu"])
+    LABEL(["Nhập nhãn và câu tiếng Việt"])
+    SAVE(["Lưu mẫu theo tài khoản"])
+    MANAGE(["Xem hoặc xóa mẫu"])
+    DETECT(["Phát hiện landmark bàn tay"])
+    CLASSIFY(["So khớp chuỗi bằng DTW"])
+    RESULT(["Hiển thị kết quả"])
+    SPEAK(["Đọc kết quả"])
+    HISTORY(["Lưu vào nhật ký phiên"])
+    REARM(["Nhận lại cử chỉ"])
+  end
+
+  USER --- USER_GATE
+  USER_GATE --- CAMERA_ON
+  USER_GATE --- RECORD
+  USER_GATE --- MANAGE
+  USER_GATE --- RESULT
+  USER_GATE --- SPEAK
+  USER_GATE --- REARM
+
+  RECORD -. "bao gồm" .-> LABEL
+  RECORD -. "bao gồm" .-> DETECT
+  RECORD -. "bao gồm" .-> SAVE
+  CLASSIFY -. "bao gồm" .-> LOAD
+  CLASSIFY -. "bao gồm" .-> DETECT
+  CLASSIFY --> RESULT
+  RESULT -. "mở rộng" .-> SPEAK
+  RESULT -. "bao gồm" .-> HISTORY
+  REARM -. "mở rộng" .-> CLASSIFY
+
+  CAMERA_ON --- CAMERA_GATE
+  DETECT --- CAMERA_GATE
+  CAMERA_GATE --- CAMERA
+  LOAD --- DATABASE_GATE
+  SAVE --- DATABASE_GATE
+  MANAGE --- DATABASE_GATE
+  DATABASE_GATE --- DATABASE
+  SPEAK --- SPEAKER_GATE
+  SPEAKER_GATE --- SPEAKER
+
+  classDef actor fill:transparent,stroke:transparent,color:#0f172a;
+  classDef external fill:#eff6ff,stroke:#2563eb,stroke-width:1.5px;
+  classDef gate fill:transparent,stroke:transparent,color:transparent;
+  class USER actor;
+  class CAMERA,DATABASE,SPEAKER external;
+  class USER_GATE,CAMERA_GATE,DATABASE_GATE,SPEAKER_GATE gate;
+  style SIGN fill:transparent,stroke:#94a3b8,stroke-width:1px;
