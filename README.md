@@ -78,3 +78,5 @@ src/
   services/     Phân loại cử chỉ, âm thanh, MediaPipe và speech API
   utils/        Vẽ landmark, clipboard và format thời gian
 ```
+
+
