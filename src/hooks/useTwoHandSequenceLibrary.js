@@ -173,5 +173,6 @@ function isValidTemplate(template) {
 }
 
 function getTemplateHandCount(template) {
-  return template?.handCount === 1 ? 1 : 2
+  const raw = template?.handCount ?? template?.hand_count
+  return raw === 1 ? 1 : 2
 }

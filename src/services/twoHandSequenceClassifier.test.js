@@ -292,3 +292,23 @@ function vectorRms(vectorA, vectorB) {
   const sum = vectorA.reduce((total, value, index) => total + (value - vectorB[index]) ** 2, 0)
   return Math.sqrt(sum / vectorA.length)
 }
+
+test('DB-shaped templates (hand_count column) keep one-hand semantics after reload', () => {
+  const staticFrame = normalizeGestureFrame([makeHand(0.5, 0.5, 0.08)])
+  const templates = [
+    { frames: Array.from({ length: 16 }, () => staticFrame), hand_count: 1, id: 'still-1', label: 'STILL', phrase: 'Dung yen.' },
+    { frames: Array.from({ length: 18 }, () => staticFrame), hand_count: 1, id: 'still-2', label: 'STILL', phrase: 'Dung yen.' },
+  ]
+  const recognizer = new TwoHandSequenceRecognizer({
+    ...TEST_CONFIG,
+    latchMaxMs: 400,
+    staticStartHoldMs: 400,
+  })
+
+  let emissions = 0
+  for (let index = 0; index < 70; index += 1) {
+    if (recognizer.update(staticFrame, index * 80, templates, 1).shouldEmit) emissions += 1
+  }
+
+  assert.equal(emissions, 1)
+})
